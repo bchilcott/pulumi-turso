@@ -25,7 +25,7 @@ import (
 	shimv2 "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim/sdk-v2"
 
 	// Replace this provider with the provider you are bridging.
-	turso "github.com/iwahbe/terraform-provider-turso/provider"
+	turso "github.com/bchilcott/terraform-provider-turso/provider"
 
 	"github.com/bchilcott/pulumi-turso/provider/pkg/version"
 )
