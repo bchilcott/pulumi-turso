@@ -15,12 +15,11 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfgen"
 	turso "github.com/bchilcott/pulumi-turso/provider"
-	"github.com/bchilcott/pulumi-turso/provider/pkg/version"
+	"github.com/pulumi/pulumi-terraform-bridge/pf/tfgen"
 )
 
 func main() {
 	// Modify the path to point to the new provider
-	tfgen.Main("turso", version.Version, turso.Provider())
+	tfgen.Main("turso", turso.Provider())
 }

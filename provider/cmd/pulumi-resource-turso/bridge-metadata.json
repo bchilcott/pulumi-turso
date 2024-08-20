@@ -1,1 +1,18 @@
-{}
+{
+    "auto-aliasing": {
+        "resources": {
+            "turso_database": {
+                "current": "turso:index/database:Database"
+            },
+            "turso_database_token": {
+                "current": "turso:index/databaseToken:DatabaseToken"
+            }
+        },
+        "datasources": {
+            "turso_database": {
+                "current": "turso:index/getDatabase:getDatabase"
+            }
+        }
+    },
+    "auto-settings": {}
+}

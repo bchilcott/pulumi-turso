@@ -8,9 +8,9 @@
     ],
     "homepage": "https://www.pulumi.com",
     "license": "Apache-2.0",
-    "attribution": "This Pulumi package is based on the [`turso` Terraform Provider](https://github.com/terraform-providers/terraform-provider-turso).",
+    "attribution": "This Pulumi package is based on the [`turso` Terraform Provider](https://github.com/bchilcott/terraform-provider-turso).",
     "repository": "https://github.com/bchilcott/pulumi-turso",
-    "publisher": "bchilcott",
+    "publisher": "Ben Chilcott",
     "meta": {
         "moduleFormat": "(.*)(?:/[^/]*)"
     },
@@ -28,7 +28,7 @@
         },
         "nodejs": {
             "packageDescription": "A Pulumi package for creating and managing turso cloud resources.",
-            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/terraform-providers/terraform-provider-turso)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi-turso` repo](https://github.com/bchilcott/pulumi-turso/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`terraform-provider-turso` repo](https://github.com/terraform-providers/terraform-provider-turso/issues).",
+            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/bchilcott/terraform-provider-turso)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi-turso` repo](https://github.com/bchilcott/pulumi-turso/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`terraform-provider-turso` repo](https://github.com/bchilcott/terraform-provider-turso/issues).",
             "dependencies": {
                 "@pulumi/pulumi": "^3.0.0"
             },
@@ -43,35 +43,231 @@
             "requires": {
                 "pulumi": "\u003e=3.0.0,\u003c4.0.0"
             },
-            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/terraform-providers/terraform-provider-turso)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi-turso` repo](https://github.com/bchilcott/pulumi-turso/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`terraform-provider-turso` repo](https://github.com/terraform-providers/terraform-provider-turso/issues).",
+            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/bchilcott/terraform-provider-turso)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi-turso` repo](https://github.com/bchilcott/pulumi-turso/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`terraform-provider-turso` repo](https://github.com/bchilcott/terraform-provider-turso/issues).",
             "compatibility": "tfbridge20",
             "pyproject": {}
         }
     },
-    "config": {},
+    "config": {
+        "variables": {
+            "apiToken": {
+                "type": "string",
+                "description": "The API token to authenticate with Turso API\n"
+            }
+        },
+        "defaults": [
+            "apiToken"
+        ]
+    },
     "provider": {
-        "description": "The provider type for the turso package. By default, resources use package-wide configuration\nsettings, however an explicit `Provider` instance may be created and passed during resource\nconstruction to achieve fine-grained programmatic control over provider settings. See the\n[documentation](https://www.pulumi.com/docs/reference/programming-model/#providers) for more information.\n"
+        "description": "The provider type for the turso package. By default, resources use package-wide configuration\nsettings, however an explicit `Provider` instance may be created and passed during resource\nconstruction to achieve fine-grained programmatic control over provider settings. See the\n[documentation](https://www.pulumi.com/docs/reference/programming-model/#providers) for more information.\n",
+        "properties": {
+            "apiToken": {
+                "type": "string",
+                "description": "The API token to authenticate with Turso API\n"
+            }
+        },
+        "required": [
+            "apiToken"
+        ],
+        "inputProperties": {
+            "apiToken": {
+                "type": "string",
+                "description": "The API token to authenticate with Turso API\n"
+            }
+        },
+        "requiredInputs": [
+            "apiToken"
+        ]
     },
     "resources": {
-        "turso:index/resource:Resource": {
+        "turso:index/database:Database": {
+            "description": "Database resource\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as turso from \"@pulumi/turso\";\n\nconst example = new turso.Database(\"example\", {\n    group: \"a-group\",\n    organizationName: \"an-organization\",\n});\n```\n```python\nimport pulumi\nimport pulumi_turso as turso\n\nexample = turso.Database(\"example\",\n    group=\"a-group\",\n    organization_name=\"an-organization\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Turso = Pulumi.Turso;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var example = new Turso.Database(\"example\", new()\n    {\n        Group = \"a-group\",\n        OrganizationName = \"an-organization\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/bchilcott/pulumi-turso/sdk/go/turso\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := turso.NewDatabase(ctx, \"example\", \u0026turso.DatabaseArgs{\n\t\t\tGroup:            pulumi.String(\"a-group\"),\n\t\t\tOrganizationName: pulumi.String(\"an-organization\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.turso.Database;\nimport com.pulumi.turso.DatabaseArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var example = new Database(\"example\", DatabaseArgs.builder()\n            .group(\"a-group\")\n            .organizationName(\"an-organization\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  example:\n    type: turso:Database\n    properties:\n      group: a-group\n      organizationName: an-organization\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\n```sh\n$ pulumi import turso:index/database:Database example_database organization_name/database_name\n```\n\n",
             "properties": {
-                "sampleAttribute": {
+                "dbId": {
                     "type": "string",
-                    "description": "Sample attribute.\n"
+                    "description": "The database universal unique identifier (UUID).\n"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "The name of the group where the database should be created. The group must already exist.\n"
+                },
+                "hostname": {
+                    "type": "string",
+                    "description": "The DNS hostname used for client libSQL and HTTP connections.\n"
+                },
+                "isSchema": {
+                    "type": "boolean",
+                    "description": "Mark this database as the parent schema database that updates child databases with any schema changes.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.\n"
+                },
+                "organizationName": {
+                    "type": "string",
+                    "description": "Name of organization to create the database for\n"
+                },
+                "schema": {
+                    "type": "string",
+                    "description": "The name of the parent database to use as the schema.\n"
+                },
+                "sizeLimit": {
+                    "type": "string",
+                    "description": "The maximum size of the database in bytes. Values with units are also accepted, e.g. 1mb, 256mb, 1gb.\n"
                 }
             },
+            "required": [
+                "dbId",
+                "group",
+                "hostname",
+                "name",
+                "organizationName"
+            ],
             "inputProperties": {
-                "sampleAttribute": {
+                "group": {
                     "type": "string",
-                    "description": "Sample attribute.\n"
+                    "description": "The name of the group where the database should be created. The group must already exist.\n"
+                },
+                "isSchema": {
+                    "type": "boolean",
+                    "description": "Mark this database as the parent schema database that updates child databases with any schema changes.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.\n"
+                },
+                "organizationName": {
+                    "type": "string",
+                    "description": "Name of organization to create the database for\n"
+                },
+                "schema": {
+                    "type": "string",
+                    "description": "The name of the parent database to use as the schema.\n"
+                },
+                "sizeLimit": {
+                    "type": "string",
+                    "description": "The maximum size of the database in bytes. Values with units are also accepted, e.g. 1mb, 256mb, 1gb.\n"
                 }
             },
+            "requiredInputs": [
+                "group",
+                "organizationName"
+            ],
             "stateInputs": {
-                "description": "Input properties used for looking up and filtering Resource resources.\n",
+                "description": "Input properties used for looking up and filtering Database resources.\n",
                 "properties": {
-                    "sampleAttribute": {
+                    "dbId": {
                         "type": "string",
-                        "description": "Sample attribute.\n"
+                        "description": "The database universal unique identifier (UUID).\n"
+                    },
+                    "group": {
+                        "type": "string",
+                        "description": "The name of the group where the database should be created. The group must already exist.\n"
+                    },
+                    "hostname": {
+                        "type": "string",
+                        "description": "The DNS hostname used for client libSQL and HTTP connections.\n"
+                    },
+                    "isSchema": {
+                        "type": "boolean",
+                        "description": "Mark this database as the parent schema database that updates child databases with any schema changes.\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.\n"
+                    },
+                    "organizationName": {
+                        "type": "string",
+                        "description": "Name of organization to create the database for\n"
+                    },
+                    "schema": {
+                        "type": "string",
+                        "description": "The name of the parent database to use as the schema.\n"
+                    },
+                    "sizeLimit": {
+                        "type": "string",
+                        "description": "The maximum size of the database in bytes. Values with units are also accepted, e.g. 1mb, 256mb, 1gb.\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "turso:index/databaseToken:DatabaseToken": {
+            "description": "Database Token resource\n",
+            "properties": {
+                "authorization": {
+                    "type": "string",
+                    "description": "Authorization level for the token (full-access or read-only).\n"
+                },
+                "databaseName": {
+                    "type": "string",
+                    "description": "The name of the database.\n"
+                },
+                "expiration": {
+                    "type": "string",
+                    "description": "Expiration time for the token (e.g., 2w1d30m).\n"
+                },
+                "jwt": {
+                    "type": "string",
+                    "description": "The generated authorization token (JWT).\n",
+                    "secret": true
+                },
+                "organizationName": {
+                    "type": "string",
+                    "description": "The name of the organization or user.\n"
+                }
+            },
+            "required": [
+                "databaseName",
+                "jwt",
+                "organizationName"
+            ],
+            "inputProperties": {
+                "authorization": {
+                    "type": "string",
+                    "description": "Authorization level for the token (full-access or read-only).\n"
+                },
+                "databaseName": {
+                    "type": "string",
+                    "description": "The name of the database.\n"
+                },
+                "expiration": {
+                    "type": "string",
+                    "description": "Expiration time for the token (e.g., 2w1d30m).\n"
+                },
+                "organizationName": {
+                    "type": "string",
+                    "description": "The name of the organization or user.\n"
+                }
+            },
+            "requiredInputs": [
+                "databaseName",
+                "organizationName"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering DatabaseToken resources.\n",
+                "properties": {
+                    "authorization": {
+                        "type": "string",
+                        "description": "Authorization level for the token (full-access or read-only).\n"
+                    },
+                    "databaseName": {
+                        "type": "string",
+                        "description": "The name of the database.\n"
+                    },
+                    "expiration": {
+                        "type": "string",
+                        "description": "Expiration time for the token (e.g., 2w1d30m).\n"
+                    },
+                    "jwt": {
+                        "type": "string",
+                        "description": "The generated authorization token (JWT).\n",
+                        "secret": true
+                    },
+                    "organizationName": {
+                        "type": "string",
+                        "description": "The name of the organization or user.\n"
                     }
                 },
                 "type": "object"
@@ -79,33 +275,88 @@
         }
     },
     "functions": {
-        "turso:index/getDataSource:getDataSource": {
+        "turso:index/getDatabase:getDatabase": {
+            "description": "Database data source\n",
             "inputs": {
-                "description": "A collection of arguments for invoking getDataSource.\n",
+                "description": "A collection of arguments for invoking getDatabase.\n",
                 "properties": {
-                    "sampleAttribute": {
-                        "type": "string"
+                    "group": {
+                        "type": "string",
+                        "description": "The name of the group where the database should be created. The group must already exist.\n"
+                    },
+                    "isSchema": {
+                        "type": "boolean",
+                        "description": "Mark this database as the parent schema database that updates child databases with any schema changes.\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.\n"
+                    },
+                    "organizationName": {
+                        "type": "string",
+                        "description": "Name of organization to create the database for\n"
+                    },
+                    "schema": {
+                        "type": "string",
+                        "description": "The name of the parent database to use as the schema.\n"
+                    },
+                    "sizeLimit": {
+                        "type": "string",
+                        "description": "The maximum size of the database in bytes. Values with units are also accepted, e.g. 1mb, 256mb, 1gb.\n"
                     }
                 },
                 "type": "object",
                 "required": [
-                    "sampleAttribute"
+                    "name",
+                    "organizationName"
                 ]
             },
             "outputs": {
-                "description": "A collection of values returned by getDataSource.\n",
+                "description": "A collection of values returned by getDatabase.\n",
                 "properties": {
+                    "dbId": {
+                        "type": "string",
+                        "description": "The database universal unique identifier (UUID).\n"
+                    },
+                    "group": {
+                        "type": "string",
+                        "description": "The name of the group where the database should be created. The group must already exist.\n"
+                    },
+                    "hostname": {
+                        "type": "string",
+                        "description": "The DNS hostname used for client libSQL and HTTP connections.\n"
+                    },
                     "id": {
                         "type": "string",
                         "description": "The provider-assigned unique ID for this managed resource.\n"
                     },
-                    "sampleAttribute": {
-                        "type": "string"
+                    "isSchema": {
+                        "type": "boolean",
+                        "description": "Mark this database as the parent schema database that updates child databases with any schema changes.\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.\n"
+                    },
+                    "organizationName": {
+                        "type": "string",
+                        "description": "Name of organization to create the database for\n"
+                    },
+                    "schema": {
+                        "type": "string",
+                        "description": "The name of the parent database to use as the schema.\n"
+                    },
+                    "sizeLimit": {
+                        "type": "string",
+                        "description": "The maximum size of the database in bytes. Values with units are also accepted, e.g. 1mb, 256mb, 1gb.\n"
                     }
                 },
                 "type": "object",
                 "required": [
-                    "sampleAttribute",
+                    "dbId",
+                    "hostname",
+                    "name",
+                    "organizationName",
                     "id"
                 ]
             }

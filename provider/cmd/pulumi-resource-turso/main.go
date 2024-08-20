@@ -15,11 +15,11 @@
 package main
 
 import (
+	"context"
 	_ "embed"
 
-	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
 	turso "github.com/bchilcott/pulumi-turso/provider"
-	"github.com/bchilcott/pulumi-turso/provider/pkg/version"
+	"github.com/pulumi/pulumi-terraform-bridge/pf/tfbridge"
 )
 
 //go:embed schema.json
@@ -27,5 +27,5 @@ var pulumiSchema []byte
 
 func main() {
 	// Modify the path to point to the new provider
-	tfbridge.Main("turso", version.Version, turso.Provider(), pulumiSchema)
+	tfbridge.Main(context.Background(), "turso", turso.Provider(), tfbridge.ProviderMetadata{PackageSchema: pulumiSchema})
 }

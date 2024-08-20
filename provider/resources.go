@@ -15,14 +15,17 @@
 package turso
 
 import (
+	"context"
 	"path"
+	"strings"
 
 	// Allow embedding bridge-metadata.json in the provider.
 	_ "embed"
 
+	pfbridge "github.com/pulumi/pulumi-terraform-bridge/pf/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/tokens"
-	shimv2 "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim/sdk-v2"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 
 	// Replace this provider with the provider you are bridging.
 	turso "github.com/bchilcott/terraform-provider-turso/provider"
@@ -106,7 +109,7 @@ func Provider() tfbridge.ProviderInfo {
 		// - "github.com/hashicorp/terraform-plugin-framework/provider".Provider (for plugin-framework)
 		//
 		//nolint:lll
-		P: shimv2.NewProvider(turso.New(version.Version)()),
+		P: pfbridge.ShimProvider(turso.New(version.Version)()),
 
 		Name:    "turso",
 		Version: version.Version,
@@ -115,7 +118,7 @@ func Provider() tfbridge.ProviderInfo {
 		DisplayName: "",
 		// Change this to your personal name (or a company name) that you would like to be shown in
 		// the Pulumi Registry if this package is published there.
-		Publisher: "bchilcott",
+		Publisher: "Ben Chilcott",
 		// LogoURL is optional but useful to help identify your package in the Pulumi Registry
 		// if this package is published there.
 		//
@@ -136,7 +139,7 @@ func Provider() tfbridge.ProviderInfo {
 		Repository: "https://github.com/bchilcott/pulumi-turso",
 		// The GitHub Org for the provider - defaults to `terraform-providers`. Note that this should
 		// match the TF provider module's require directive, not any replace directives.
-		GitHubOrg:    "",
+		GitHubOrg:    "bchilcott",
 		MetadataInfo: tfbridge.NewProviderMetadata(metadata),
 		Config:       map[string]*tfbridge.SchemaInfo{
 			// Add any required configuration here, or remove the example below if
@@ -192,5 +195,32 @@ func Provider() tfbridge.ProviderInfo {
 	prov.MustApplyAutoAliases()
 	prov.SetAutonaming(255, "-")
 
+	setupComputedIDs(&prov)
+
 	return prov
+}
+
+func setupComputedIDs(prov *tfbridge.ProviderInfo) {
+	attr := func(state resource.PropertyMap, attrs ...resource.PropertyKey) resource.ID {
+		parts := []string{}
+		for _, a := range attrs {
+			if v, ok := state[a]; ok {
+				if v.IsString() && v.StringValue() != "" {
+					parts = append(parts, v.StringValue())
+				}
+			}
+		}
+		s := strings.Join(parts, "__")
+		if s == "" {
+			s = "id"
+		}
+		return resource.ID(s)
+	}
+
+	prov.Resources["turso_database"].ComputeID = func(ctx context.Context, state resource.PropertyMap) (resource.ID, error) {
+		return attr(state, "id"), nil
+	}
+	prov.Resources["turso_database_token"].ComputeID = func(ctx context.Context, state resource.PropertyMap) (resource.ID, error) {
+		return attr(state, "id"), nil
+	}
 }
