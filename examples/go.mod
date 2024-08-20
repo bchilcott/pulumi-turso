@@ -1,3 +1,3 @@
-module github.com/pulumi/pulumi-xyz/examples
+module github.com/bchilcott/pulumi-turso/examples
 
 go 1.21
